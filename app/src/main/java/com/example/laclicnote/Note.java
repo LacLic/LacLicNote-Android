@@ -8,9 +8,10 @@ public class Note {
     private String content;
     private Time genTime;
     private Time lastModifiedTime;
-    // TODO: icon, picture*9
+    // TODO: picture*9
 
-    public Note(int ID, int imgId, String title, String snapShot, String content, Time genTime, Time lastModifiedTime) {
+    public Note(int ID, int imgId, String title, String snapShot, String content,
+                Time genTime, Time lastModifiedTime) {
         this.ID = ID;
         this.imgId = imgId;
         this.title = title;
