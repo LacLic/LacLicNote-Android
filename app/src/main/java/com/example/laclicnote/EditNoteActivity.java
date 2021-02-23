@@ -1,9 +1,11 @@
 package com.example.laclicnote;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +18,21 @@ public class EditNoteActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(EditNoteActivity.this);
+                dialog.setTitle("Warning");
+                dialog.setMessage("Are you sure to discard all your changes?");
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                dialog.show();
                 break;
         }
         return true;
