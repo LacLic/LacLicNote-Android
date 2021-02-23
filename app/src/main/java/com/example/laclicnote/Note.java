@@ -1,6 +1,6 @@
 package com.example.laclicnote;
 
-import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Note {
     private int ID;
@@ -9,12 +9,12 @@ public class Note {
     private String title;
     private String snapShot;
     private String content;
-    private SimpleDateFormat genTime;
-    private SimpleDateFormat lastModifiedTime;
+    private Date genTime;
+    private Date lastModifiedTime;
     // TODO: picture*9
 
     public Note(int ID, int imgId, boolean favorite, String title, String snapShot, String content,
-                SimpleDateFormat genTime, SimpleDateFormat lastModifiedTime) {
+                Date genTime, Date lastModifiedTime) {
         this.ID = ID;
         this.imgId = imgId;
         this.favorite = favorite;
@@ -49,11 +49,11 @@ public class Note {
         return content;
     }
 
-    public SimpleDateFormat getGenTime() {
+    public Date getGenTime() {
         return genTime;
     }
 
-    public SimpleDateFormat getLastModifiedTime() {
+    public Date getLastModifiedTime() {
         return lastModifiedTime;
     }
 }

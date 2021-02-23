@@ -44,18 +44,20 @@
 
                 <TextView
                     android:id="@+id/note_title"
-                    android:gravity="left"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="left"
                     android:textColor="#000000"
                     android:textColorLink="#FFFFFF"
                     android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/gen_time"
-                    android:gravity="right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/time_color"
+                    android:textSize="@dimen/time_font_size"
+                    android:gravity="right|end|bottom" />
 
             </LinearLayout>
 
@@ -63,19 +65,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp">
 
                 <TextView
                     android:id="@+id/note_snaps"
-                    android:gravity="left"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left" />
 
                 <TextView
-                    android:id="@+id/last_modified_time"
-                    android:gravity="right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:id="@+id/last_modi_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom|right|end"
+                    android:textColor="@color/time_color"
+                    android:textSize="@dimen/time_font_size" />
             </LinearLayout>
         </LinearLayout>
 

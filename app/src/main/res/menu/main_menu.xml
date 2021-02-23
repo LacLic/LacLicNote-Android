@@ -2,7 +2,18 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/baseline_search_black_24dp"
+        android:title="Search"
+        app:showAsAction="always" />
 
-    <item android:title="Item" />
-    <item android:title="Item" />
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/baseline_delete_forever_black_24dp"
+        android:title="Delete"
+        app:showAsAction="ifRoom" />
+
+    <item android:title="Settings" />
+    <item android:title="About" />
 </menu>
