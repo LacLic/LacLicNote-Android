@@ -1,19 +1,23 @@
 package com.example.laclicnote;
 
+import java.text.SimpleDateFormat;
+
 public class Note {
     private int ID;
     private int imgId;
+    private boolean favorite;
     private String title;
     private String snapShot;
     private String content;
-    private Time genTime;
-    private Time lastModifiedTime;
+    private SimpleDateFormat genTime;
+    private SimpleDateFormat lastModifiedTime;
     // TODO: picture*9
 
-    public Note(int ID, int imgId, String title, String snapShot, String content,
-                Time genTime, Time lastModifiedTime) {
+    public Note(int ID, int imgId, boolean favorite, String title, String snapShot, String content,
+                SimpleDateFormat genTime, SimpleDateFormat lastModifiedTime) {
         this.ID = ID;
         this.imgId = imgId;
+        this.favorite = favorite;
         this.title = title;
         this.snapShot = snapShot;
         this.content = content;
@@ -29,6 +33,10 @@ public class Note {
         return imgId;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -41,11 +49,11 @@ public class Note {
         return content;
     }
 
-    public Time getGenTime() {
+    public SimpleDateFormat getGenTime() {
         return genTime;
     }
 
-    public Time getLastModifiedTime() {
+    public SimpleDateFormat getLastModifiedTime() {
         return lastModifiedTime;
     }
 }

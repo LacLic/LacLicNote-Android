@@ -1,6 +1,7 @@
 package com.example.laclicnote;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -27,8 +29,16 @@ public class NoteAdapter extends ArrayAdapter<Note> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Note note = getItem(position); // 获取当前Note实例
+        Context thisAct = getContext();
         View view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
         FloatingActionButton note_fab_icon = (FloatingActionButton) view.findViewById(R.id.note_fab_icon);
+        note_fab_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent edit_note_intent = new Intent(thisAct, EditNewNote.class);
+                thisAct.startActivity(edit_note_intent);
+            }
+        });
         TextView note_title = (TextView) view.findViewById(R.id.note_title);
         TextView note_snaps = (TextView) view.findViewById(R.id.note_snaps);
 //        note_fab_icon.setBackground();

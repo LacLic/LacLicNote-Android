@@ -12,7 +12,9 @@ import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initNotes() {
-        Time time = new Time(2000,1,1,4,5,14);
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat time = new SimpleDateFormat("'IMG'_yyyyMMdd_HHmmss");
         for(int i=0;i<10;++i) {
             Note math = new Note(i*2,i*2,"Math","Math is...",
                     "Math is sky!",time,time);
