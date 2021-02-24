@@ -86,7 +86,7 @@
                 app:srcCompat="@drawable/baseline_star_border_yellow_700_48dp" />
 
             <Switch
-                android:id="@+id/switch1"
+                android:id="@+id/isFav"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="12dp"

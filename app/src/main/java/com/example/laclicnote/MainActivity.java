@@ -3,12 +3,15 @@ package com.example.laclicnote;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -63,14 +66,15 @@ public class MainActivity extends AppCompatActivity {
         // 隐藏进度条
         progressBar.setVisibility(View.GONE);
 
-        // 列表视窗 List View
+        // 列表视窗 Recycler View
 //        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 //                MainActivity.this, android.R.layout.simple_list_item_1, data);
         initNotes();
-        NoteAdapter adapter = new NoteAdapter(MainActivity.this, R.layout.note_item, noteList);
-        ListView mainList = (ListView) findViewById(R.id.main_list);
-        mainList.setAdapter(adapter);
-
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        NoteAdapter adapter = new NoteAdapter(noteList);
+        recyclerView.setAdapter(adapter);
     }
 
     private void initNotes() {
