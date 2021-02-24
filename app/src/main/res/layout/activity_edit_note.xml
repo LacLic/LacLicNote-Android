@@ -39,7 +39,7 @@
                 app:srcCompat="@drawable/baseline_title_blue_500_48dp" />
 
             <EditText
-                android:id="@+id/title_edit_text"
+                android:id="@+id/title_note_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
@@ -63,7 +63,7 @@
                 app:srcCompat="@drawable/outline_subtitles_blue_500_48dp" />
 
             <EditText
-                android:id="@+id/snaps_edit_text"
+                android:id="@+id/snaps_note_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
@@ -86,7 +86,7 @@
                 app:srcCompat="@drawable/baseline_star_border_yellow_700_48dp" />
 
             <Switch
-                android:id="@+id/isFav"
+                android:id="@+id/isFav_note_edit"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="12dp"
@@ -112,7 +112,7 @@
             android:layout_marginLeft="6dp"
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/content"
+                android:id="@+id/content_note_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#00FFFFFF"

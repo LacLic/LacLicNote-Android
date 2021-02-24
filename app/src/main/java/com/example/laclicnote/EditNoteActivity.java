@@ -6,10 +6,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Switch;
+import android.widget.TextView;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
 
@@ -72,6 +77,22 @@ public class EditNoteActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 左侧添加一个默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); // 设置返回键可用
+
+        // 获取传入值
+        Intent intent = getIntent();
+        Note thisNote = (Note) intent.getSerializableExtra("thisNote");
+
+        // 定位并填写元素
+        if(thisNote!=null) {
+            TextView noteTitle = findViewById(R.id.title_note_edit);
+            noteTitle.setText(thisNote.getTitle());
+            TextView noteSnaps = findViewById(R.id.snaps_note_edit);
+            noteSnaps.setText(thisNote.getSnapShot());
+            Switch noteIsFav = findViewById(R.id.isFav_note_edit);
+            noteIsFav.setChecked(thisNote.isFavorite());
+            TextInputEditText noteContent = findViewById(R.id.content_note_edit);
+            noteContent.setText(thisNote.getContent());
+        }
 
     }
 }

@@ -1,8 +1,9 @@
 package com.example.laclicnote;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Note {
+public class Note implements Serializable {
     private int ID;
     private int imgId;
     private boolean favorite;
