@@ -16,14 +16,29 @@ import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.Objects;
+import java.util.Date;
 
 public class EditNoteActivity extends AppCompatActivity {
 
-    private void quitAlert() {
+    private Note thisNote;
+    private int enterCode;
+    private int thisPos;
+
+    private Note noteReturn() {
+        TextView noteTitle = findViewById(R.id.title_note_edit);
+        TextView noteSnaps = findViewById(R.id.snaps_note_edit);
+        Switch noteIsFav = findViewById(R.id.isFav_note_edit);
+        TextInputEditText noteContent = findViewById(R.id.content_note_edit);
+        Note return_note = new Note(thisNote.getID(),thisNote.getImgId(),noteIsFav.isChecked(),
+                noteTitle.getText().toString(),noteSnaps.getText().toString(),
+                noteContent.getText().toString(),thisNote.getGenTime(), new Date(System.currentTimeMillis()));
+        return return_note;
+    }
+
+    private void quitAlert(String message) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(EditNoteActivity.this);
         dialog.setTitle("Warning");
-        dialog.setMessage("Are you sure to discard all your changes?");
+        dialog.setMessage(message);
         dialog.setCancelable(false);
         dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -42,7 +57,7 @@ public class EditNoteActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode==KeyEvent.KEYCODE_BACK) {
-            quitAlert();
+            quitAlert("Are you sure to discard all your changes?");
             return true;
         }else {
             return super.onKeyDown(keyCode,event);
@@ -51,9 +66,31 @@ public class EditNoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent_return = new Intent();
         switch (item.getItemId()) {
             case android.R.id.home:
-                quitAlert();
+                quitAlert("Are you sure to discard all your changes?");
+                break;
+            case R.id.delete_edit_note:
+                quitAlert("Do you really want to delete this note?");
+                intent_return.putExtra("code",CONST.DELETE);
+                intent_return.putExtra("this_pos",thisPos);
+                setResult(RESULT_OK, intent_return);
+                break;
+            case R.id.confirm_edit_note:
+                intent_return.putExtra("note",noteReturn());
+                switch (enterCode) {
+                    case CONST.EDIT:
+                        intent_return.putExtra("code",CONST.EDIT);
+                        intent_return.putExtra("this_pos",thisPos);
+                        break;
+                    case CONST.ADD:
+                        intent_return.putExtra("code",CONST.ADD);
+                        break;
+                }
+                intent_return.putExtra("note_return",noteReturn());
+                setResult(RESULT_OK, intent_return);
+                finish();
                 break;
         }
         return true;
@@ -80,10 +117,12 @@ public class EditNoteActivity extends AppCompatActivity {
 
         // 获取传入值
         Intent intent = getIntent();
-        Note thisNote = (Note) intent.getSerializableExtra("thisNote");
+        thisNote = (Note) intent.getSerializableExtra("this_note");
+        thisPos = intent.getIntExtra("this_pos",CONST.NULL);
+        enterCode = intent.getIntExtra("code",CONST.NULL);
 
         // 定位并填写元素
-        if(thisNote!=null) {
+        if(enterCode==CONST.EDIT) {
             TextView noteTitle = findViewById(R.id.title_note_edit);
             noteTitle.setText(thisNote.getTitle());
             TextView noteSnaps = findViewById(R.id.snaps_note_edit);

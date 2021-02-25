@@ -14,6 +14,11 @@ public class Note implements Serializable {
     private Date lastModifiedTime;
     // TODO: picture*9
 
+    @Override
+    public int hashCode() {
+        return ID;
+    }
+
     public Note(int ID, int imgId, boolean favorite, String title, String snapShot, String content,
                 Date genTime, Date lastModifiedTime) {
         this.ID = ID;

@@ -3,7 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/Confirm"
+        android:id="@+id/delete_edit_note"
+        android:icon="@drawable/baseline_delete_forever_black_24dp"
+        android:title="Delete"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/confirm_edit_note"
         android:icon="@drawable/baseline_check_black_24dp"
         android:title="Confirm"
         app:showAsAction="always" />

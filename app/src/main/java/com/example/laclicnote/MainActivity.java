@@ -1,5 +1,6 @@
 package com.example.laclicnote;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -33,6 +34,31 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /** extraData:
+     *      DELETE: "this_pos"
+     *      EDIT: "this_pos", "note_return"
+     *      ADD: "note_return"
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            int note_return_code = data.getIntExtra("code", CONST.NULL);
+            int returnNotePos = data.getIntExtra("this_pos", CONST.NULL);
+            Note returnNote = (Note) data.getSerializableExtra("note_return");
+            switch (note_return_code) {
+                case CONST.DELETE:
+                    noteList.remove(returnNotePos);
+                    break;
+                case CONST.EDIT:
+                    noteList.set(returnNotePos, returnNote);
+                    break;
+                case CONST.ADD:
+                    noteList.add(returnNote);
+                    break;
+            }
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -59,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
                 Intent add_new_note_intent = new Intent(MainActivity.this, EditNoteActivity.class);
 //                Log.d("noteList", String.valueOf(noteList));
-                startActivity(add_new_note_intent);
+                add_new_note_intent.putExtra("code",CONST.ADD);
+                startActivityForResult(add_new_note_intent,1);
             }
         });
 
@@ -80,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     private void initNotes() {
         Date date = new Date(System.currentTimeMillis());
         for(int i=0;i<10;++i) {
-            Note math = new Note(i*2,i*2,false,"Math","Math is...",
+            Note math = new Note(i*2,i*2,true,"Math","Math is...",
                     "Math is sky!",date,date);
             noteList.add(math);
             Note chemistry = new Note(i*2+1,i*2+1,false,"Chemistry","Chem is...",
