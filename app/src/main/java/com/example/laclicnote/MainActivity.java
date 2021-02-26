@@ -7,17 +7,26 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.alibaba.fastjson.JSON;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +36,62 @@ public class MainActivity extends AppCompatActivity {
     private List<Note> noteList = new ArrayList<>();
 
     private ProgressBar progressBar;
+
+    private void save() throws IOException {
+        // 转换为JSON
+        String noteStr = JSON.toJSONString(noteList);
+        Log.d("save()",noteStr);
+
+        // 文件写入
+        FileOutputStream out = null;
+        BufferedWriter writer = null;
+        try {
+            out = openFileOutput("noteData", Context.MODE_PRIVATE);
+            writer = new BufferedWriter(new OutputStreamWriter(out));
+            writer.write(noteStr);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (writer!=null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void load() {
+        // 文件读取
+        FileInputStream in = null;
+        BufferedReader reader = null;
+        StringBuilder content = new StringBuilder();
+        try {
+            in = openFileInput("noteData");
+            reader = new BufferedReader(new InputStreamReader(in));
+            String line = "";
+            while ((line = reader.readLine())!=null) {
+                content.append(line);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // json转列表
+        List<Note> noteList = JSON.parseObject(content.toString(), List.class);
+//        return noteList;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -57,6 +122,15 @@ public class MainActivity extends AppCompatActivity {
                     noteList.add(returnNote);
                     break;
             }
+
+            // 写入到文件
+            try {
+                save();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // 重构列表视窗
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(layoutManager);
@@ -91,7 +165,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent add_new_note_intent = new Intent(MainActivity.this, EditNoteActivity.class);
 //                Log.d("noteList", String.valueOf(noteList));
                 add_new_note_intent.putExtra("code",CONST.ADD);
-                add_new_note_intent.putExtra("newID",noteList.get(noteList.size()-1).getID()+1);
+                add_new_note_intent.putExtra("newID",noteList.isEmpty()
+                        ? 1
+                        : noteList.get(noteList.size()-1).getID()+1);
                 startActivityForResult(add_new_note_intent,1);
             }
         });
@@ -102,14 +178,15 @@ public class MainActivity extends AppCompatActivity {
         // 列表视窗 Recycler View
 //        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 //                MainActivity.this, android.R.layout.simple_list_item_1, data);
-        initNotes();
+//        initNotes();
+//        noteList = load();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         NoteAdapter adapter = new NoteAdapter(noteList);
         recyclerView.setAdapter(adapter);
     }
-
+/*
     private void initNotes() {
         Date date = new Date(System.currentTimeMillis());
         for(int i=0;i<10;++i) {
@@ -121,4 +198,5 @@ public class MainActivity extends AppCompatActivity {
             noteList.add(chemistry);
         }
     }
+ */
 }
