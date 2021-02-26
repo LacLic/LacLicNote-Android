@@ -17,6 +17,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.BufferedReader;
@@ -89,8 +92,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // json转列表
-        List<Note> noteList = JSON.parseObject(content.toString(), List.class);
-//        return noteList;
+//        JSONArray array = JSONArray.parseArray(content.toString());
+//        List<Note> temp = JSONObject.parseArray(array.toJSONString(), Note.class);
+//        List<Note> temp = JSON.parseObject(content.toString(),new TypeReference<List<Note>>(){});
+//        List<Note> temp = JSON.parseArray(content.toString(),Note.class);
+        noteList = JSON.parseArray(content.toString(),Note.class);
+//        Log.d("Temp",temp.toString());
     }
 
     @Override
@@ -178,15 +185,16 @@ public class MainActivity extends AppCompatActivity {
         // 列表视窗 Recycler View
 //        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 //                MainActivity.this, android.R.layout.simple_list_item_1, data);
+        load();
 //        initNotes();
-//        noteList = load();
+        Log.d("noteList",noteList.toString());
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         NoteAdapter adapter = new NoteAdapter(noteList);
         recyclerView.setAdapter(adapter);
     }
-/*
+
     private void initNotes() {
         Date date = new Date(System.currentTimeMillis());
         for(int i=0;i<10;++i) {
@@ -198,5 +206,4 @@ public class MainActivity extends AppCompatActivity {
             noteList.add(chemistry);
         }
     }
- */
 }

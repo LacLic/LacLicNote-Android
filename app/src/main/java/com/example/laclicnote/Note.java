@@ -1,5 +1,7 @@
 package com.example.laclicnote;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -14,10 +16,18 @@ public class Note implements Serializable {
     private Date lastModifiedTime;
     // TODO: picture*9
 
+    @NonNull
+    @Override
+    public String toString() {
+        return "{ID: " + Integer.toString(ID) + ", title: " + title + "}";
+    }
+
     @Override
     public int hashCode() {
         return ID;
     }
+
+    public Note() {}
 
     public Note(int ID, int imgId, boolean favorite, String title, String snapShot, String content,
                 Date genTime, Date lastModifiedTime) {
@@ -62,4 +72,37 @@ public class Note implements Serializable {
     public Date getLastModifiedTime() {
         return lastModifiedTime;
     }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public void setImgId(int imgId) {
+        this.imgId = imgId;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setSnapShot(String snapShot) {
+        this.snapShot = snapShot;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setGenTime(Date genTime) {
+        this.genTime = genTime;
+    }
+
+    public void setLastModifiedTime(Date lastModifiedTime) {
+        this.lastModifiedTime = lastModifiedTime;
+    }
+
 }
