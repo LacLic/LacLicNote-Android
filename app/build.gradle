@@ -37,6 +37,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     // For control over item selection of both touch and mouse driven selection
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation files('F:\\Programmer\\JavaPack\\fastjson-1.2.53.jar')
     implementation files('F:\\Programmer\\JavaPack\\javax.activation-1.2.0.jar')
     implementation files('F:\\Programmer\\JavaPack\\jaxb-api-2.3.0.jar')

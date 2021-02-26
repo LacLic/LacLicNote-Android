@@ -16,11 +16,9 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -42,8 +40,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void save() throws IOException {
         // 转换为JSON
-        String noteStr = JSON.toJSONString(noteList);
-        Log.d("save()",noteStr);
+//        String noteStr = JSON.toJSONString(noteList);
+        Gson gson = new Gson();
+        String noteStr = gson.toJson(noteList);
+//        Log.d("save()",noteStr);
 
         // 文件写入
         FileOutputStream out = null;
@@ -96,7 +96,9 @@ public class MainActivity extends AppCompatActivity {
 //        List<Note> temp = JSONObject.parseArray(array.toJSONString(), Note.class);
 //        List<Note> temp = JSON.parseObject(content.toString(),new TypeReference<List<Note>>(){});
 //        List<Note> temp = JSON.parseArray(content.toString(),Note.class);
-        noteList = JSON.parseArray(content.toString(),Note.class);
+//        noteList = JSON.parseArray(content.toString(),Note.class);
+        Gson gson = new Gson();
+        noteList = gson.fromJson(content.toString(), new TypeToken<List<Note>>() {}.getType());
 //        Log.d("Temp",temp.toString());
     }
 
@@ -195,15 +197,15 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    private void initNotes() {
-        Date date = new Date(System.currentTimeMillis());
-        for(int i=0;i<10;++i) {
-            Note math = new Note(i*2,i*2,true,"Math","Math is...",
-                    "Math is sky!",date,date);
-            noteList.add(math);
-            Note chemistry = new Note(i*2+1,i*2+1,false,"Chemistry","Chem is...",
-                    "Chem is try.",date,date);
-            noteList.add(chemistry);
-        }
-    }
+//    private void initNotes() {
+//        Date date = new Date(System.currentTimeMillis());
+//        for(int i=0;i<10;++i) {
+//            Note math = new Note(i*2,i*2,true,"Math","Math is...",
+//                    "Math is sky!",date,date);
+//            noteList.add(math);
+//            Note chemistry = new Note(i*2+1,i*2+1,false,"Chemistry","Chem is...",
+//                    "Chem is try.",date,date);
+//            noteList.add(chemistry);
+//        }
+//    }
 }
