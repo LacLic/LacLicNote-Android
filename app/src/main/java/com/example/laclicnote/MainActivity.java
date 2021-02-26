@@ -57,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
                     noteList.add(returnNote);
                     break;
             }
+            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+            NoteAdapter adapter = new NoteAdapter(noteList);
+            recyclerView.setAdapter(adapter);
         }
     }
 
@@ -86,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent add_new_note_intent = new Intent(MainActivity.this, EditNoteActivity.class);
 //                Log.d("noteList", String.valueOf(noteList));
                 add_new_note_intent.putExtra("code",CONST.ADD);
+                add_new_note_intent.putExtra("newID",noteList.get(noteList.size()-1).getID()+1);
                 startActivityForResult(add_new_note_intent,1);
             }
         });

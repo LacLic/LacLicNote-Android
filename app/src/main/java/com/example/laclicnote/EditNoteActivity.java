@@ -24,15 +24,21 @@ public class EditNoteActivity extends AppCompatActivity {
     private int enterCode;
     private int thisPos;
 
+    private Note template(int newID) {
+        return new Note(newID,0,false, "","", "",
+                new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
+    }
+
     private Note noteReturn() {
         TextView noteTitle = findViewById(R.id.title_note_edit);
         TextView noteSnaps = findViewById(R.id.snaps_note_edit);
         Switch noteIsFav = findViewById(R.id.isFav_note_edit);
         TextInputEditText noteContent = findViewById(R.id.content_note_edit);
-        Note return_note = new Note(thisNote.getID(),thisNote.getImgId(),noteIsFav.isChecked(),
+        return new Note(thisNote.getID(),thisNote.getImgId(),noteIsFav.isChecked(),
                 noteTitle.getText().toString(),noteSnaps.getText().toString(),
-                noteContent.getText().toString(),thisNote.getGenTime(), new Date(System.currentTimeMillis()));
-        return return_note;
+                noteContent.getText().toString(),
+                enterCode==CONST.EDIT?thisNote.getGenTime():new Date(System.currentTimeMillis()),
+                new Date(System.currentTimeMillis()));
     }
 
     private void quitAlert(String message) {
@@ -78,7 +84,6 @@ public class EditNoteActivity extends AppCompatActivity {
                 setResult(RESULT_OK, intent_return);
                 break;
             case R.id.confirm_edit_note:
-                intent_return.putExtra("note",noteReturn());
                 switch (enterCode) {
                     case CONST.EDIT:
                         intent_return.putExtra("code",CONST.EDIT);
@@ -131,6 +136,8 @@ public class EditNoteActivity extends AppCompatActivity {
             noteIsFav.setChecked(thisNote.isFavorite());
             TextInputEditText noteContent = findViewById(R.id.content_note_edit);
             noteContent.setText(thisNote.getContent());
+        }else {
+            thisNote = template(intent.getIntExtra("newID",CONST.NULL));
         }
 
     }
