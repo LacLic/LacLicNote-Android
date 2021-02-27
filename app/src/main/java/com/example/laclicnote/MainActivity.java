@@ -38,6 +38,14 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
 
+    void displayRecyclerView() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        NoteAdapter adapter = new NoteAdapter(noteList);
+        recyclerView.setAdapter(adapter);
+    }
+
     private void save() throws IOException {
         // 转换为JSON
 //        String noteStr = JSON.toJSONString(noteList);
@@ -102,6 +110,20 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d("Temp",temp.toString());
     }
 
+    int findNotePos(int ID) {
+        int pos = CONST.NULL;
+        for(int i = noteList.size()-1;i>=0;--i) {
+            if(noteList.get(i).getID()==ID) {
+                pos = i;
+            }
+        }
+        if(pos==CONST.NULL) {
+            Log.d("noteList","NoteFindError");
+        }
+        Log.d("position",Integer.toString(pos));
+        return pos;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -118,14 +140,16 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             int note_return_code = data.getIntExtra("code", CONST.NULL);
-            int returnNotePos = data.getIntExtra("this_pos", CONST.NULL);
+            int returnNoteID = data.getIntExtra("id", CONST.NULL);
             Note returnNote = (Note) data.getSerializableExtra("note_return");
             switch (note_return_code) {
                 case CONST.DELETE:
-                    noteList.remove(returnNotePos);
+//                    noteList.remove(findNotePos(returnNoteID));
+                    findNotePos(returnNoteID);
                     break;
                 case CONST.EDIT:
-                    noteList.set(returnNotePos, returnNote);
+                    findNotePos(returnNoteID);
+//                    noteList.set(findNotePos(returnNoteID), returnNote);
                     break;
                 case CONST.ADD:
                     noteList.add(returnNote);
@@ -140,11 +164,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // 重构列表视窗
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(layoutManager);
-            NoteAdapter adapter = new NoteAdapter(noteList);
-            recyclerView.setAdapter(adapter);
+            displayRecyclerView();
         }
     }
 
@@ -190,11 +210,7 @@ public class MainActivity extends AppCompatActivity {
         load();
 //        initNotes();
         Log.d("noteList",noteList.toString());
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        NoteAdapter adapter = new NoteAdapter(noteList);
-        recyclerView.setAdapter(adapter);
+        displayRecyclerView();
     }
 
 //    private void initNotes() {

@@ -73,6 +73,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
         // fab
         Activity thisAct = (Activity) holder.itemView.getContext();
+        if(note.isFavorite()) {
+            holder.noteFab.setImageResource(R.drawable.baseline_star_yellow_700_48dp);
+        }else {
+            holder.noteFab.setImageResource(0);
+        }
         holder.noteFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

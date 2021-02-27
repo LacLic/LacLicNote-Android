@@ -80,14 +80,14 @@ public class EditNoteActivity extends AppCompatActivity {
             case R.id.delete_edit_note:
                 quitAlert("Do you really want to delete this note?");
                 intent_return.putExtra("code",CONST.DELETE);
-                intent_return.putExtra("this_pos",thisPos);
+                intent_return.putExtra("id",thisNote.getID());
                 setResult(RESULT_OK, intent_return);
                 break;
             case R.id.confirm_edit_note:
                 switch (enterCode) {
                     case CONST.EDIT:
                         intent_return.putExtra("code",CONST.EDIT);
-                        intent_return.putExtra("this_pos",thisPos);
+                        intent_return.putExtra("id",thisNote.getID());
                         break;
                     case CONST.ADD:
                         intent_return.putExtra("code",CONST.ADD);

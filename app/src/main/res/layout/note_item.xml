@@ -19,13 +19,15 @@
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/note_fab_icon"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginLeft="2dp"
                 android:clickable="true"
+                android:tint="@color/blond"
                 app:backgroundTint="@color/light_blue"
-                app:srcCompat="?attr/actionBarItemBackground" />
+                app:fabSize="auto"
+                app:srcCompat="@android:drawable/btn_star" />
         </LinearLayout>
 
         <LinearLayout

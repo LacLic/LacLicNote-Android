@@ -27,8 +27,6 @@ public class Note implements Serializable {
         return ID;
     }
 
-    public Note() {}
-
     public Note(int ID, int imgId, boolean favorite, String title, String snapShot, String content,
                 Date genTime, Date lastModifiedTime) {
         this.ID = ID;
@@ -73,36 +71,36 @@ public class Note implements Serializable {
         return lastModifiedTime;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-
-    public void setImgId(int imgId) {
-        this.imgId = imgId;
-    }
-
-    public void setFavorite(boolean favorite) {
-        this.favorite = favorite;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setSnapShot(String snapShot) {
-        this.snapShot = snapShot;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public void setGenTime(Date genTime) {
-        this.genTime = genTime;
-    }
-
-    public void setLastModifiedTime(Date lastModifiedTime) {
-        this.lastModifiedTime = lastModifiedTime;
-    }
+//    public void setID(int ID) {
+//        this.ID = ID;
+//    }
+//
+//    public void setImgId(int imgId) {
+//        this.imgId = imgId;
+//    }
+//
+//    public void setFavorite(boolean favorite) {
+//        this.favorite = favorite;
+//    }
+//
+//    public void setTitle(String title) {
+//        this.title = title;
+//    }
+//
+//    public void setSnapShot(String snapShot) {
+//        this.snapShot = snapShot;
+//    }
+//
+//    public void setContent(String content) {
+//        this.content = content;
+//    }
+//
+//    public void setGenTime(Date genTime) {
+//        this.genTime = genTime;
+//    }
+//
+//    public void setLastModifiedTime(Date lastModifiedTime) {
+//        this.lastModifiedTime = lastModifiedTime;
+//    }
 
 }
