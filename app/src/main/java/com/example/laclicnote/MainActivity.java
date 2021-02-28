@@ -32,12 +32,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private boolean displayFav = false;
+    private int sequenceCondition = CONST.GENERATE_TIME;
 
     private List<Note> noteList = new ArrayList<>();
 
@@ -176,6 +179,83 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if(sequenceCondition==CONST.GENERATE_TIME) {
+            sortNoteListGen();
+        }else if(sequenceCondition==CONST.MODIFIED_TIME) {
+            sortNoteListModi();
+        }
+
+        if(displayFav) {
+            MenuItem searchItem = mainMenu.findItem(R.id.search_main);
+            displayRecyclerView(searchFav());
+            searchItem.setVisible(false);
+        }else {
+            displayRecyclerView(noteList);
+        }
+    }
+
+    private void initSearchView(MenuItem item) {
+        // 定位searchView
+        final SearchView searchView = (SearchView) item.getActionView();
+//        Log.d("item search view","");
+
+        // 监听
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                MenuItem favItem = mainMenu.findItem(R.id.display_fav_main);
+                MenuItem seqItem = mainMenu.findItem(R.id.sequence_main);
+                if(newText.isEmpty()) {
+                    favItem.setVisible(true);
+                    seqItem.setVisible(true);
+                }
+                else {
+                    favItem.setVisible(false);
+                    seqItem.setVisible(false);
+                }
+                List<Note> filteredModelList = searchTitle(newText);
+                displayRecyclerView(filteredModelList);
+                return true;
+            }
+        });
+    }
+
+    private List<Note> searchTitle(String newText) {
+        List<Note> result = new ArrayList<>();
+        for(Iterator<Note> it = noteList.iterator(); it.hasNext();){
+            Note temp = it.next();
+            if(temp.getTitle().toLowerCase().contains(newText.toLowerCase())) {
+                result.add(temp);
+            }
+        }
+        return result;
+    }
+
+
+//    private void initNotes() {
+//        Date date = new Date(System.currentTimeMillis());
+//        for(int i=0;i<10;++i) {
+//            Note math = new Note(i*2,i*2,true,"Math","Math is...",
+//                    "Math is sky!",date,date);
+
+
+//            noteList.add(math);
+//            Note chemistry = new Note(i*2+1,i*2+1,false,"Chemistry","Chem is...",
+//                    "Chem is try.",date,date);
+//            noteList.add(chemistry);
+//        }
+//    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,10 +295,9 @@ public class MainActivity extends AppCompatActivity {
         // 列表视窗 Recycler View
 //        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 //                MainActivity.this, android.R.layout.simple_list_item_1, data);
+
+        // 载入文件
         load();
-//        initNotes();
-        Log.d("noteList",noteList.toString());
-        displayRecyclerView(noteList);
 
         // 搜索
 //        MenuItem searchAction = (MenuItem) findViewById(R.id.search);
@@ -228,64 +307,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        if(displayFav) {
-            MenuItem searchItem = mainMenu.findItem(R.id.search_main);
-            displayRecyclerView(searchFav());
-            searchItem.setVisible(false);
-        }
-    }
-
-    private void initSearchView(MenuItem item) {
-        // 定位searchView
-        final SearchView searchView = (SearchView) item.getActionView();
-//        Log.d("item search view","");
-
-        // 监听
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                MenuItem favItem = mainMenu.findItem(R.id.display_fav_main);
-                if(newText.isEmpty()) {
-                    favItem.setVisible(true);
-                }
-                else {
-                    favItem.setVisible(false);
-                }
-                List<Note> filteredModelList = searchTitle(newText);
-                displayRecyclerView(filteredModelList);
-                return true;
-            }
-        });
-    }
-
-    private List<Note> searchTitle(String newText) {
-        List<Note> result = new ArrayList<>();
-        for(Iterator<Note> it = noteList.iterator(); it.hasNext();){
-            Note temp = it.next();
-            if(temp.getTitle().toLowerCase().contains(newText.toLowerCase())) {
-                result.add(temp);
-            }
-        }
-        return result;
-    }
-
-//    private void initNotes() {
-//        Date date = new Date(System.currentTimeMillis());
-//        for(int i=0;i<10;++i) {
-//            Note math = new Note(i*2,i*2,true,"Math","Math is...",
-//                    "Math is sky!",date,date);
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+
+            case R.id.sequence_main:
+                if(sequenceCondition==CONST.GENERATE_TIME) {
+                    sortNoteListModi();
+                    item.setTitle(R.string.genTime);
+                    sequenceCondition = CONST.MODIFIED_TIME;
+                }else if(sequenceCondition==CONST.MODIFIED_TIME) {
+                    sortNoteListGen();
+                    item.setTitle(R.string.modiTime);
+                    sequenceCondition = CONST.GENERATE_TIME;
+                }
+
+                // 保存
+                try {
+                    save();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if(displayFav) {
+                    displayRecyclerView(searchFav());
+                }else {
+                    displayRecyclerView(noteList);
+                }
+                break;
+
             case R.id.display_fav_main:
                 MenuItem searchItem = mainMenu.findItem(R.id.search_main);
                 if(displayFav) {
@@ -298,6 +347,7 @@ public class MainActivity extends AppCompatActivity {
                     searchItem.setVisible(false);
                 }
                 displayFav = !displayFav;
+
         }
         return true;
     }
@@ -313,10 +363,21 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
-//            noteList.add(math);
-//            Note chemistry = new Note(i*2+1,i*2+1,false,"Chemistry","Chem is...",
-//                    "Chem is try.",date,date);
-//            noteList.add(chemistry);
-//        }
-//    }
+    private void sortNoteListGen() {
+        Collections.sort(noteList, new Comparator<Note>(){
+            @Override
+            public int compare(Note o1, Note o2) {
+                return o1.getGenTime().compareTo(o2.getGenTime());
+            }
+        });
+    }
+
+    private void sortNoteListModi() {
+        Collections.sort(noteList, new Comparator<Note>(){
+            @Override
+            public int compare(Note o1, Note o2) {
+                return o1.getLastModifiedTime().compareTo(o2.getLastModifiedTime());
+            }
+        });
+    }
 }

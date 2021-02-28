@@ -7,4 +7,6 @@ public final class CONST {
     public static final int ADD = 1;
     public static final int EDIT = 2;
     public static final int DELETE = 3;
+    public static final int MODIFIED_TIME = 10000;
+    public static final int GENERATE_TIME = 10001;
 }
