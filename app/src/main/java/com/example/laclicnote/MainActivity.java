@@ -1,8 +1,10 @@
 package com.example.laclicnote;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -29,20 +32,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private boolean displayFav = false;
+
     private List<Note> noteList = new ArrayList<>();
 
-    private ProgressBar progressBar;
+    private Menu mainMenu;
 
-    void displayRecyclerView() {
+    void displayRecyclerView(List<Note> lst) {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        NoteAdapter adapter = new NoteAdapter(noteList);
+        NoteAdapter adapter = new NoteAdapter(lst);
         recyclerView.setAdapter(adapter);
     }
 
@@ -127,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        mainMenu = menu;
+        MenuItem searchAction = (MenuItem) menu.findItem(R.id.search_main);
+        initSearchView(searchAction);
         return true;
     }
 
@@ -138,18 +146,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_OK) {
             int note_return_code = data.getIntExtra("code", CONST.NULL);
             int returnNoteID = data.getIntExtra("id", CONST.NULL);
             Note returnNote = (Note) data.getSerializableExtra("note_return");
             switch (note_return_code) {
                 case CONST.DELETE:
-//                    noteList.remove(findNotePos(returnNoteID));
-                    findNotePos(returnNoteID);
+                    noteList.remove(findNotePos(returnNoteID));
                     break;
                 case CONST.EDIT:
-                    findNotePos(returnNoteID);
-//                    noteList.set(findNotePos(returnNoteID), returnNote);
+                    noteList.set(findNotePos(returnNoteID), returnNote);
                     break;
                 case CONST.ADD:
                     noteList.add(returnNote);
@@ -164,7 +171,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // 重构列表视窗
-            displayRecyclerView();
+            displayRecyclerView(noteList);
+
         }
     }
 
@@ -176,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // 进度条 Progress Bar
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
 
         // 工具栏 Tool Bar
@@ -210,7 +218,63 @@ public class MainActivity extends AppCompatActivity {
         load();
 //        initNotes();
         Log.d("noteList",noteList.toString());
-        displayRecyclerView();
+        displayRecyclerView(noteList);
+
+        // 搜索
+//        MenuItem searchAction = (MenuItem) findViewById(R.id.search);
+//
+//        initSearchView(searchAction);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(displayFav) {
+            MenuItem searchItem = mainMenu.findItem(R.id.search_main);
+            displayRecyclerView(searchFav());
+            searchItem.setVisible(false);
+        }
+    }
+
+    private void initSearchView(MenuItem item) {
+        // 定位searchView
+        final SearchView searchView = (SearchView) item.getActionView();
+//        Log.d("item search view","");
+
+        // 监听
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                MenuItem favItem = mainMenu.findItem(R.id.display_fav_main);
+                if(newText.isEmpty()) {
+                    favItem.setVisible(true);
+                }
+                else {
+                    favItem.setVisible(false);
+                }
+                List<Note> filteredModelList = searchTitle(newText);
+                displayRecyclerView(filteredModelList);
+                return true;
+            }
+        });
+    }
+
+    private List<Note> searchTitle(String newText) {
+        List<Note> result = new ArrayList<>();
+        for(Iterator<Note> it = noteList.iterator(); it.hasNext();){
+            Note temp = it.next();
+            if(temp.getTitle().toLowerCase().contains(newText.toLowerCase())) {
+                result.add(temp);
+            }
+        }
+        return result;
     }
 
 //    private void initNotes() {
@@ -218,6 +282,37 @@ public class MainActivity extends AppCompatActivity {
 //        for(int i=0;i<10;++i) {
 //            Note math = new Note(i*2,i*2,true,"Math","Math is...",
 //                    "Math is sky!",date,date);
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.display_fav_main:
+                MenuItem searchItem = mainMenu.findItem(R.id.search_main);
+                if(displayFav) {
+                    item.setIcon(R.drawable.baseline_favorite_border_black_24dp);
+                    displayRecyclerView(noteList);
+                    searchItem.setVisible(true);
+                }else{
+                    item.setIcon(R.drawable.baseline_favorite_black_24dp);
+                    displayRecyclerView(searchFav());
+                    searchItem.setVisible(false);
+                }
+                displayFav = !displayFav;
+        }
+        return true;
+    }
+
+    private List<Note> searchFav() {
+        List<Note> result = new ArrayList<>();
+        for(Iterator<Note> it = noteList.iterator(); it.hasNext();){
+            Note temp = it.next();
+            if(temp.isFavorite()) {
+                result.add(temp);
+            }
+        }
+        return result;
+    }
+
 //            noteList.add(math);
 //            Note chemistry = new Note(i*2+1,i*2+1,false,"Chemistry","Chem is...",
 //                    "Chem is try.",date,date);
